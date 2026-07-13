@@ -120,6 +120,81 @@ describe("basic rewriting (happy path)", () => {
 	});
 });
 
+describe("<link> rel handling", () => {
+	test("rewrites a favicon <link rel=icon href>", async () => {
+		write(
+			"favicon.png",
+			Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
+		);
+		const builder = makeBuilder();
+
+		const html = await render(
+			builder,
+			`<link rel="icon" href="/favicon.png" />`
+		);
+		const url = extractAttr(html, /<link[^>]*\shref="([^"]+)"/);
+		expect(url).toMatch(/^\/assets\/favicon-[0-9a-f]{8}\.png$/);
+
+		const res = fetchAsset(builder, url);
+		expect(res.status).toBe(200);
+		expect(res.headers.get("Content-Type")).toMatch(/image\/png/);
+	});
+
+	test("rewrites an apple-touch-icon <link>, case-insensitively", async () => {
+		write("touch-icon.png", Buffer.from([0x89, 0x50, 0x4e, 0x47]));
+		const builder = makeBuilder();
+
+		const html = await render(
+			builder,
+			`<link rel="Apple-Touch-Icon" href="/touch-icon.png" />`
+		);
+		const url = extractAttr(html, /<link[^>]*\shref="([^"]+)"/);
+		expect(url).toMatch(/^\/assets\/touch-icon-[0-9a-f]{8}\.png$/);
+	});
+
+	test("rewrites a <link rel=manifest href>", async () => {
+		write("app.webmanifest", `{"name":"app"}`);
+		const builder = makeBuilder();
+
+		const html = await render(
+			builder,
+			`<link rel="manifest" href="/app.webmanifest" />`
+		);
+		const url = extractAttr(html, /<link[^>]*\shref="([^"]+)"/);
+		expect(url).toMatch(/^\/assets\/app-[0-9a-f]{8}\.webmanifest$/);
+	});
+
+	test("rewrites a <link rel=preload href> to a shared hashed url with the tag it preloads", async () => {
+		write("client.ts", `console.log("preloaded");\n`);
+		const builder = makeBuilder();
+
+		const html = await render(
+			builder,
+			`<link rel="preload" href="/client.ts" as="script" />` +
+				`<script src="/client.ts" type="module"></script>`
+		);
+		const urls = [
+			...html.matchAll(/\shref="([^"]+)"|\ssrc="([^"]+)"/g),
+		].map((m) => m[1] ?? m[2]);
+		expect(urls).toHaveLength(2);
+		expect(urls[0]).toBe(urls[1]);
+		expect(urls[0]).toMatch(/^\/assets\/client-[0-9a-z]+\.js$/);
+	});
+
+	test("leaves unrelated <link> rels (canonical, preconnect) untouched", async () => {
+		const builder = makeBuilder();
+
+		const html = await render(
+			builder,
+			`<link rel="canonical" href="/some-page" />` +
+				`<link rel="preconnect" href="/api" />`
+		);
+
+		expect(html).toContain('rel="canonical" href="/some-page"');
+		expect(html).toContain('rel="preconnect" href="/api"');
+	});
+});
+
 describe("content hashing", () => {
 	test("streamed hashing of a copied asset matches a plain sha256 of the file", async () => {
 		const content = "raw file content for hashing test\n".repeat(50);

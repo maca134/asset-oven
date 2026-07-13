@@ -30,6 +30,23 @@ const BUNDLE_EXTENSIONS = new Set([
 	".css",
 ]);
 
+// only these `<link>` rel values point at a servable local file we should
+// hash/cache; others (canonical, preconnect, alternate, author, search, ...)
+// hold routes/origins rather than files and are left untouched
+const REWRITABLE_LINK_RELS = new Set([
+	"stylesheet",
+	"icon",
+	"shortcut icon",
+	"apple-touch-icon",
+	"apple-touch-icon-precomposed",
+	"apple-touch-startup-image",
+	"mask-icon",
+	"manifest",
+	"preload",
+	"modulepreload",
+	"prefetch",
+]);
+
 function stripQuery(src: string): string {
 	const idx = src.search(/[?#]/);
 	return idx === -1 ? src : src.slice(0, idx);
@@ -86,8 +103,8 @@ export class AssetBuilder {
 			.on("script[src]", {
 				element: (element) => this.#onAttribute(element, "src"),
 			})
-			.on("link[rel=stylesheet][href]", {
-				element: (element) => this.#onAttribute(element, "href"),
+			.on("link[href]", {
+				element: (element) => this.#onLink(element),
 			})
 			.on("img[src]", {
 				element: (element) => this.#onAttribute(element, "src"),
@@ -299,6 +316,13 @@ export class AssetBuilder {
 			type: source.type || "application/octet-stream",
 		});
 		return url;
+	}
+
+	async #onLink(element: HTMLRewriterTypes.Element) {
+		const rel = element.getAttribute("rel")?.trim().toLowerCase();
+		if (!rel || !REWRITABLE_LINK_RELS.has(rel)) return;
+
+		await this.#onAttribute(element, "href");
 	}
 
 	async #onAttribute(element: HTMLRewriterTypes.Element, attr: string) {
