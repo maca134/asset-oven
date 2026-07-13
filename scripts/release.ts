@@ -59,6 +59,8 @@ if (typeAnswer === null) {
 	process.exit(1);
 }
 
+await Bun.sleep(100);
+
 const releaseType = typeAnswer.trim().toLowerCase();
 if (!RELEASE_TYPES.includes(releaseType as ReleaseType)) {
 	console.error(
@@ -66,6 +68,7 @@ if (!RELEASE_TYPES.includes(releaseType as ReleaseType)) {
 	);
 	process.exit(1);
 }
+
 
 const versionExitCode = run(["bun", "pm", "version", releaseType], PACKAGE_DIR);
 if (versionExitCode !== 0) {
@@ -79,6 +82,8 @@ if (publishAnswer === null || !/^y(es)?$/i.test(publishAnswer.trim())) {
 	console.log("Skipped publish. Run `bun pm publish` when you're ready.");
 	process.exit(0);
 }
+
+await Bun.sleep(100);
 
 const publishExitCode = run(["bun", "publish"], PACKAGE_DIR);
 if (publishExitCode !== 0) {
