@@ -1,9 +1,16 @@
 /**
  * Interactive release helper: prompts for a release type, bumps
- * package.json and creates the matching commit + git tag via
- * `bun pm version`, then optionally pushes both to origin. Pushing the tag
- * triggers the `.github/workflows/publish.yml` CI workflow, which does the
- * actual `bun publish` -- this script does not publish locally.
+ * asset-oven/package.json via `bun pm version --no-git-tag-version`, then
+ * creates the matching commit + git tag itself and optionally pushes both
+ * to origin. Pushing the tag triggers the `.github/workflows/publish.yml`
+ * CI workflow, which does the actual `bun publish` -- this script does not
+ * publish locally.
+ *
+ * The commit/tag step is done here rather than left to `bun pm version`
+ * because that command only creates the git commit + tag when run from the
+ * git root -- from a workspace subdirectory (asset-oven/, in this monorepo)
+ * it silently just edits package.json with no error (verified against Bun
+ * 1.3.14).
  *
  * Run with: bun run release
  */
@@ -71,10 +78,32 @@ if (!RELEASE_TYPES.includes(releaseType as ReleaseType)) {
 	process.exit(1);
 }
 
-const versionExitCode = run(["bun", "pm", "version", releaseType], PACKAGE_DIR);
+const versionExitCode = run(
+	["bun", "pm", "version", releaseType, "--no-git-tag-version"],
+	PACKAGE_DIR
+);
 if (versionExitCode !== 0) {
 	console.error("bun pm version failed -- aborting release.");
 	process.exit(versionExitCode);
+}
+
+const newPkg = (await Bun.file(`${PACKAGE_DIR}/package.json`).json()) as {
+	version: string;
+};
+const tag = `v${newPkg.version}`;
+console.log(`Bumped to ${tag}`);
+
+if (run(["git", "add", `${PACKAGE_DIR}/package.json`]) !== 0) {
+	console.error("git add failed -- aborting release.");
+	process.exit(1);
+}
+if (run(["git", "commit", "-m", tag]) !== 0) {
+	console.error("git commit failed -- aborting release.");
+	process.exit(1);
+}
+if (run(["git", "tag", tag]) !== 0) {
+	console.error("git tag failed -- aborting release.");
+	process.exit(1);
 }
 
 const pushAnswer = prompt(
