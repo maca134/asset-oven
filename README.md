@@ -92,6 +92,6 @@ cd asset-oven && bun test
 
 MIT
 
-### 🤖 AI Disclaimer
+## 🤖 AI Disclaimer
 
 This project uses AI-assisted development tools. All output has been reviewed by a human (me). The overall structure of the project and original prototyping was written by a human.
