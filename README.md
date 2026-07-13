@@ -4,6 +4,8 @@
 
 **asset-oven** is a lazy, content-hashed asset middleware for [Bun](https://bun.com) — local asset paths written straight into server-rendered HTML just work, no bundler config, no manifest, no build step to remember to run.
 
+I'd previously written a small [bundler](https://gist.github.com/maca134/cd9fd5fdddddcaca13b05fa08681f196) for Bun + Hono that I've been using on other projects for a while, but recently I've needed to work on more static sites and enjoyed using [Hono](https://hono.dev)'s server-side [JSX](https://hono.dev/docs/guides/jsx) for templating, so I ended up writing asset-oven as a weekend project with some help from Claude.
+
 ```ts
 import { Hono } from "hono";
 import { builder } from "asset-oven/hono";
@@ -89,3 +91,7 @@ cd asset-oven && bun test
 ## License
 
 MIT
+
+### 🤖 AI Disclaimer
+
+This project uses AI-assisted development tools. All output has been reviewed by a human (me). The overall structure of the project and original prototyping was written by a human.
