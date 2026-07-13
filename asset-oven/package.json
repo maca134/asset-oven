@@ -1,6 +1,6 @@
 {
 	"name": "asset-oven",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Lazy, content-hashed asset middleware for Bun — local asset paths in server-rendered HTML just work.",
 	"type": "module",
 	"license": "MIT",

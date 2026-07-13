@@ -1,7 +1,9 @@
 /**
  * Interactive release helper: prompts for a release type, bumps
  * package.json and creates the matching commit + git tag via
- * `bun pm version`, then optionally pushes both to origin.
+ * `bun pm version`, then optionally pushes both to origin. Pushing the tag
+ * triggers the `.github/workflows/publish.yml` CI workflow, which does the
+ * actual `bun publish` -- this script does not publish locally.
  *
  * Run with: bun run release
  */
@@ -75,28 +77,13 @@ if (versionExitCode !== 0) {
 	process.exit(versionExitCode);
 }
 
-// publish
-const publishAnswer = prompt("Publish the new version to npm now? (y/N)", "N");
-if (publishAnswer === null || !/^y(es)?$/i.test(publishAnswer.trim())) {
-	console.log("Skipped publish. Run `bun pm publish` when you're ready.");
-	process.exit(0);
-}
-
-await Bun.sleep(500);
-
-const publishExitCode = run(["bun", "publish"], PACKAGE_DIR);
-if (publishExitCode !== 0) {
-	console.error("bun publish failed -- aborting release.");
-	process.exit(publishExitCode);
-}
-
 const pushAnswer = prompt(
-	"Push the new commit and tag to origin now? (y/N)",
+	"Push the new commit and tag to origin now? This triggers the CI publish workflow. (y/N)",
 	"N"
 );
 if (pushAnswer === null || !/^y(es)?$/i.test(pushAnswer.trim())) {
 	console.log(
-		"Skipped push. Run `git push --follow-tags` when you're ready."
+		"Skipped push. Run `git push --follow-tags` when you're ready to publish."
 	);
 	process.exit(0);
 }
