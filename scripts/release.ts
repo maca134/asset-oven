@@ -101,7 +101,9 @@ if (run(["git", "commit", "-m", tag]) !== 0) {
 	console.error("git commit failed -- aborting release.");
 	process.exit(1);
 }
-if (run(["git", "tag", tag]) !== 0) {
+// annotated (-a), not lightweight: `git push --follow-tags` below only
+// pushes annotated tags, ignoring lightweight ones by design
+if (run(["git", "tag", "-a", tag, "-m", tag]) !== 0) {
 	console.error("git tag failed -- aborting release.");
 	process.exit(1);
 }
