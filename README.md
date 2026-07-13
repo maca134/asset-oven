@@ -1,7 +1,6 @@
 <div align="center">
-  <img src="asset-oven.png" width="65" height="auto" alt="asset-oven"/>
+  <img src="asset-oven.png" width="160" height="auto" alt="asset-oven"/>
 </div>
-
 
 **asset-oven** is a lazy, content-hashed asset middleware for [Bun](https://bun.com) — local asset paths written straight into server-rendered HTML just work, no bundler config, no manifest, no build step to remember to run.
 
