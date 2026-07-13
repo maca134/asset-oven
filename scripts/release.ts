@@ -59,7 +59,7 @@ if (typeAnswer === null) {
 	process.exit(1);
 }
 
-await Bun.sleep(100);
+await Bun.sleep(500);
 
 const releaseType = typeAnswer.trim().toLowerCase();
 if (!RELEASE_TYPES.includes(releaseType as ReleaseType)) {
@@ -82,7 +82,7 @@ if (publishAnswer === null || !/^y(es)?$/i.test(publishAnswer.trim())) {
 	process.exit(0);
 }
 
-await Bun.sleep(100);
+await Bun.sleep(500);
 
 const publishExitCode = run(["bun", "publish"], PACKAGE_DIR);
 if (publishExitCode !== 0) {
