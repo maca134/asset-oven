@@ -1,0 +1,33 @@
+# dependencies (bun install) - matches at any depth: root, asset-oven/, examples/*/
+node_modules
+
+# test fixture scratch dirs (asset-oven/src/*.test.ts)
+.test-tmp
+
+# build output
+dist
+out
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+*.log
+
+# env files
+.env
+.env.*
+!.env.example
+
+# caches
+.bun-cache
+.eslintcache
+*.tsbuildinfo
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea

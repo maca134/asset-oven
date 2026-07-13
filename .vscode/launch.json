@@ -1,0 +1,38 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "bun",
+			"internalConsoleOptions": "neverOpen",
+			"request": "launch",
+			"name": "Debug: hono-basic example",
+			"program": "${workspaceFolder}/examples/hono-basic/index.tsx",
+			"cwd": "${workspaceFolder}/examples/hono-basic",
+			"stopOnEntry": false,
+			"watchMode": false
+		},
+		{
+			"type": "bun",
+			"internalConsoleOptions": "neverOpen",
+			"request": "launch",
+			"name": "Debug: bun-serve example",
+			"program": "${workspaceFolder}/examples/bun-serve/index.ts",
+			"cwd": "${workspaceFolder}/examples/bun-serve",
+			"stopOnEntry": false,
+			"watchMode": false
+		},
+		{
+			"type": "bun",
+			"internalConsoleOptions": "neverOpen",
+			"request": "launch",
+			"name": "Debug: nested-assets example",
+			"program": "${workspaceFolder}/examples/nested-assets/index.ts",
+			"cwd": "${workspaceFolder}/examples/nested-assets",
+			"stopOnEntry": false,
+			"watchMode": false
+		}
+	]
+}

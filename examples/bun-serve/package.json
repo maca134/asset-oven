@@ -1,0 +1,12 @@
+{
+	"name": "example-bun-serve",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "bun run --hot index.ts"
+	},
+	"dependencies": {
+		"asset-oven": "workspace:*"
+	}
+}

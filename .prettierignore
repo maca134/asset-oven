@@ -1,0 +1,11 @@
+# dependencies
+node_modules
+
+# lockfiles - not meant to be hand-formatted
+bun.lock
+
+# test fixture scratch dirs
+.test-tmp
+
+# cache folder
+.cache

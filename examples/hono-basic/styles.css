@@ -1,0 +1,21 @@
+/* With nesting */
+.card {
+	background: white;
+	border-radius: 4px;
+
+	.title {
+		font-size: 1.2rem;
+		font-weight: bold;
+	}
+
+	.content {
+		padding: 1rem;
+	}
+}
+
+#app {
+	background: url(./bun.png) no-repeat center center;
+	background-size: contain;
+	width: 100px;
+	height: 100px;
+}

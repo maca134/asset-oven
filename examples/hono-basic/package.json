@@ -1,0 +1,13 @@
+{
+	"name": "example-hono-basic",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "bun run --hot index.tsx"
+	},
+	"dependencies": {
+		"asset-oven": "workspace:*",
+		"hono": "^4.12.29"
+	}
+}

@@ -1,0 +1,8 @@
+/* small CSS-referenced images get inlined as a data URI by Bun's bundler,
+   unlike JS imports (see client.ts) which always resolve to a served file */
+#banner {
+	background: url(./logo.png) no-repeat center center;
+	background-size: contain;
+	width: 100px;
+	height: 100px;
+}
