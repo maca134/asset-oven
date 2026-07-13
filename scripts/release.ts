@@ -69,7 +69,6 @@ if (!RELEASE_TYPES.includes(releaseType as ReleaseType)) {
 	process.exit(1);
 }
 
-
 const versionExitCode = run(["bun", "pm", "version", releaseType], PACKAGE_DIR);
 if (versionExitCode !== 0) {
 	console.error("bun pm version failed -- aborting release.");
