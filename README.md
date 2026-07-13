@@ -51,7 +51,7 @@ Then just reference assets by their on-disk path in your HTML — `<script src="
 - **Nested assets just resolve** 🔗 — a JS `import` of an image or a CSS `url()` background produces its own hashed URL automatically, via `Bun.build`'s own dependency graph.
 - **Real static-file serving** 📦 — Range requests, `HEAD`, and immutable long-lived caching headers, so video/audio scrubbing and CDN caching work correctly.
 - **Two thin adapters** 🔌 — a Hono middleware (`asset-oven/hono`) and a plain `Bun.serve` fetch wrapper (`asset-oven/bun`), both backed by the same framework-agnostic `AssetBuilder` core.
-- **Sensible defaults, fully overridable** ⚙️ — `minify`, `sourcemap`, and cache-retry timing default off `NODE_ENV`, and the raw `Bun.build` config (plugins, `define`, etc.) can be passed straight through.
+- **Sensible defaults, fully overridable** ⚙️ — cache-retry timing defaults off `NODE_ENV`, and the raw `Bun.build` config (`minify`, `sourcemap`, plugins, `define`, etc.) can be passed straight through.
 
 ## Examples
 
@@ -72,15 +72,13 @@ Swap in `examples/bun-serve` or `examples/nested-assets` for the other two.
 
 `AssetBuilderOptions`, accepted by both adapters and the `AssetBuilder` core:
 
-| Option             | Default                                 | Description                                                    |
-| ------------------ | --------------------------------------- | -------------------------------------------------------------- |
-| `root`             | `process.cwd()`                         | Directory local asset paths are resolved against.              |
-| `publicPath`       | `""`                                    | Prefix prepended to every hashed asset URL.                    |
-| `cacheDir`         | a random `os.tmpdir()` subdir           | Output directory for built/copied assets; wiped on boot.       |
-| `build`            | `{}`                                    | Merged into every `Bun.build` call (plugins, `define`, etc).   |
-| `minify`           | `true` in production, else `false`      | Minify bundled output.                                         |
-| `sourcemap`        | `"none"` in production, else `"inline"` | Sourcemap mode for bundled output.                             |
-| `negativeCacheTtl` | `60000`ms in production, else `5000`ms  | How long a failed/missing asset lookup is cached before retry. |
+| Option             | Default                                | Description                                                                           |
+| ------------------ | -------------------------------------- | ------------------------------------------------------------------------------------- |
+| `root`             | `process.cwd()`                        | Directory local asset paths are resolved against.                                     |
+| `publicPath`       | `""`                                   | Prefix prepended to every hashed asset URL.                                           |
+| `cacheDir`         | a random `os.tmpdir()` subdir          | Output directory for built/copied assets; wiped on boot.                              |
+| `build`            | `{}`                                   | Merged into every `Bun.build` call — e.g. `minify`, `sourcemap`, `plugins`, `define`. |
+| `negativeCacheTtl` | `60000`ms in production, else `5000`ms | How long a failed/missing asset lookup is cached before retry.                        |
 
 ## Testing
 

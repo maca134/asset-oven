@@ -11,7 +11,7 @@ export type AssetBuilderOptions = {
 	publicPath?: string;
 	/** Output directory for built/copied assets. Defaults to a random subdir of `os.tmpdir()`. Wiped and recreated on boot. */
 	cacheDir?: string;
-	/** Merged into every `Bun.build` call. `entrypoints`/`outdir`/`root`/`target`/`naming`/`publicPath`/`metafile` are always overridden; this can still override `minify`/`sourcemap` below. */
+	/** Merged into every `Bun.build` call — e.g. `minify`, `sourcemap`, `plugins`, `define`. `entrypoints`/`outdir`/`root`/`target`/`naming`/`publicPath`/`metafile` are always overridden. */
 	build?: Partial<Bun.BuildConfig>;
 	/** How long (ms) a failed or missing asset lookup is negative-cached before a retry is allowed. Defaults to 60000 when `process.env.NODE_ENV === "production"`, else 5000. */
 	negativeCacheTtl?: number;
